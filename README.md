@@ -69,7 +69,7 @@ struct CruiseControlDemoApp: App {
 }
 ```
 
-❗️Note: It is important you call `initializeCruiseControl()` before creating your first view. This function will set up the navigation service that will take care of all upcoming navigation.
+❗️Note: It is important you call `initializeCruiseControl()` before creating your first view. This function will set up the navigation service that will take care of upcoming navigation.
 
 ### CCNavigationStack Setup 🛠️
 
