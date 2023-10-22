@@ -3,7 +3,7 @@
 CruiseControl is a navigation framework for SwiftUI. CruiseControl this based on Apples [NavigationStack](https://developer.apple.com/documentation/swiftui/navigationstack).
 
 ## Why❔
-CruiseControl is made to abstract the navigation away from the views. CruiseControl this very suiable with [MVVM](https://en.wikipedia.org/wiki/Model–view–viewmodel). With CruiseControl you are able to perform navigation from your viewModels. This facilitates more reusable and testable view/viewModel code.
+CruiseControl is made to abstract the navigation away from the views. CruiseControl this very suiable with [MVVM](https://en.wikipedia.org/wiki/Model–view–viewmodel). With CruiseControl you are able to perform navigation from your `ViewModel`s. This facilitates more reusable and testable `View`/`ViewModel` code.
 
 ## Requirements ✅
 - iOS 16+
@@ -33,13 +33,22 @@ targets: [
 
 ### Initialisation
 
-First, in your `@main` `App` struct file import CruiseControl.
+First, in your `@main` `App` file import CruiseControl.
 
 ```swift
 import CruiseControl
 ```
 
-Then, create a `init()` where you should call `initializeCruiseControl()`. `initializeCruiseControl()` has default parameters. If you need personal modification feel free to provide explit parameters.
+Then, create a `init()` where you should call `initializeCruiseControl()`. `initializeCruiseControl()` has default parameters. Feel free to override the default parameter to fit your needs.
+
+```swift
+init() {
+    initializeCruiseControl()
+}
+```
+
+You should end up with a `@main` `App` like:
+
 
 ```swift
 import SwiftUI
