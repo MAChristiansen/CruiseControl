@@ -39,7 +39,7 @@ First, in your `@main` `App` file import CruiseControl.
 import CruiseControl
 ```
 
-Then, create a `init()` where you should call `initializeCruiseControl()`. `initializeCruiseControl()` has default parameters. Feel free to override the default parameter to fit your needs.
+Then, create a `init()` where you call `initializeCruiseControl()`. `initializeCruiseControl()` has default parameters. Feel free to override the default parameter to fit your needs.
 
 ```swift
 init() {
