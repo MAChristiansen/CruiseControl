@@ -8,11 +8,23 @@ public class CCNavigationStack<Destination: CCDestination>: ObservableObject {
     @Published var presentAlert: Bool = false
     var alert: AlertModel?
     
-    public init() { }
+    private let navigationService: CCNavigationService
+    
+    public init(navigationService: CCNavigationService) {
+        self.navigationService = navigationService
+    }
     
     func dismissAlert() {
         presentAlert = false
         presentSheetAlert = false
         alert = nil
+    }
+    
+    func onAppear() {
+        navigationService.register(self)
+    }
+    
+    func onDisappear() {
+        navigationService.unregister(self)
     }
 }

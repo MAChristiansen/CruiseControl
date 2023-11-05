@@ -19,10 +19,10 @@ public struct CCNavigationView<Destination: CCDestination, RootView: View>: View
                 }
         }
         .onAppear {
-            navigationService?.register(navigationStack)
+            navigationStack.onAppear()
         }
         .onDisappear {
-            navigationService?.unregister(navigationStack)
+            navigationStack.onDisappear()
         }
         .sheet(isPresented: .constant(navigationStack.sheet != nil), onDismiss: {
             navigationStack.sheet = nil

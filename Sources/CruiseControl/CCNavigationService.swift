@@ -1,35 +1,23 @@
 import Foundation
 import OSLog
 
-/// The navigationService is your service that controls and manage all your view navigation
-public internal(set) var navigationService: CCNavigationService?
-
-var logger: Logger?
-
-/// Initialize the CCNavigationService and the internal Logger (OSLog) with the provided bundle identifier for your application. If you don't provide your bundle identifier the Logger will not be initialized.
-/// - Parameters:
-///   - service: The navgiation service you want to be used in your application timespan
-///   - bundleIdentifier: Bundle identifier for your application to initiate the internal Logger.
-public func initializeCruiseControl(service: CCNavigationService = CCNavigationService(), bundleIdentifier: String? = nil) {
-    navigationService = service
-    
-    if let bundleIdentifier {
-        logger = Logger(subsystem: bundleIdentifier, category: "CruiseControlNavigation")
-    }
+public protocol CCNavigationServiceDelegate {
+    func onWarning(_ description: String)
+    func onError(_ error: Error)
 }
 
 open class CCNavigationService {
     
     private var navigationStacks = [AnyObject]()
+    public var delegate: CCNavigationServiceDelegate?
     
     public init() { }
-    
     
     /// Registers the navigation stack. You must register your navigation stack before you can perform navigation actions on it. You can't register multiple stack of the same type.
     /// - Parameter stack: The navigation stack you want to register
     func register<T: CCDestination>(_ stack: CCNavigationStack<T>) {
         if navigationStacks.filter({ $0 is CCNavigationStack<T> }).count > 0 {
-            logger?.error("You already have a navigation stack of this type!")
+            delegate?.onError(CCNavigationServiceError.destinationStackAlreadyRegistered)
             return
         }
         
@@ -145,7 +133,7 @@ open class CCNavigationService {
             let navigationStack = try self.getNavigationStack(for: destination)
             
             guard let destinationIndex = navigationStack.stack.firstIndex(of: destination) else {
-                logger?.warning("The specified destination is not in the navigation stack.")
+                self.delegate?.onWarning("The specified destination is not in the navigation stack.")
                 return
             }
             
@@ -174,7 +162,7 @@ open class CCNavigationService {
             }
         }
         
-        throw NavigationError.navigatorNotMatchingDestinationType
+        throw CCNavigationServiceError.navigationStackNotMatchingDestinationType
     }
     
     private func getNavigationStack<T: CCDestination>(forType type: T.Type) throws -> CCNavigationStack<T> {
@@ -184,7 +172,7 @@ open class CCNavigationService {
             }
         }
         
-        throw NavigationError.navigatorNotMatchingDestinationType
+        throw CCNavigationServiceError.navigationStackNotMatchingDestinationType
     }
     
     private func onMainThread(_ action: @escaping () throws -> Void) {
@@ -192,14 +180,14 @@ open class CCNavigationService {
             do {
                 try action()
             } catch {
-                logger?.error("\(error)")
+                self.delegate?.onError(error)
             }
         }
     }
     
-    enum NavigationError: Error {
-        case noNavigatorForTag(tag: String)
-        case navigatorNotMatchingDestinationType
-        case noDestinationsToPush
-    }
+}
+
+enum CCNavigationServiceError: Error {
+    case navigationStackNotMatchingDestinationType
+    case destinationStackAlreadyRegistered
 }
