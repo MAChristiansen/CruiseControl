@@ -11,7 +11,9 @@ open class CCNavigationService {
     private var navigationStacks = [AnyObject]()
     public var delegate: CCNavigationServiceDelegate?
     
-    public init() { }
+    public init(delegate: CCNavigationServiceDelegate? = nil) {
+        self.delegate = delegate
+    }
     
     /// Registers the navigation stack. You must register your navigation stack before you can perform navigation actions on it. You can't register multiple stack of the same type.
     /// - Parameter stack: The navigation stack you want to register

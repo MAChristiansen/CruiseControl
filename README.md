@@ -31,45 +31,17 @@ targets: [
 
 ## Documentation 📝
 
-### Initialisation
-
-First, in your `@main` `App` file import CruiseControl.
-
-```swift
-import CruiseControl
-```
-
-Then, create a `init()` where you call `initializeCruiseControl()`. `initializeCruiseControl()` has default parameters. Feel free to override the default parameter to fit your needs.
+### CCNavigationService Initialization
+First of all you need to create an instance of `CCNavigationService`. It is important to create Singleton instance to keep a single reference to your navigation service. We recommend you to create a public or static reference or resolve the `CCNavigationService` from your Dependency Injection framework.
 
 ```swift
-init() {
-    initializeCruiseControl()
-}
-```
-
-You should end up with a `@main` `App` like:
-
-
-```swift
-import SwiftUI
+import Foundation
 import CruiseControl
 
-@main
-struct CruiseControlDemoApp: App {
-    
-    init() {
-        initializeCruiseControl()
-    }
-    
-    var body: some Scene {
-        WindowGroup {
-            MainView()
-        }
-    }
-}
+var navigationService = CCNavigationService()
 ```
 
-❗️Note: It is important you call `initializeCruiseControl()` before creating your first view. This function will set up the navigation service that will take care of upcoming navigation.
+❗️To retrieve callbacks on the `CCNavigationService` provide a `CCNavigationServiceDelegate` in the `init()` or assign the `delegate` runtime.
 
 ### CCNavigationStack Setup 🛠️
 
@@ -113,13 +85,13 @@ import CruiseControl
 
 struct MainView: View {
     var body: some View {
-        CCNavigationView(navigationStack: CCNavigationStack<MainDestinations>()) {
+        CCNavigationView(navigationStack: CCNavigationStack<MainDestinations>(navigationService: navigationService)) {
             MainRootView()
         }
     }
 }
 ```
-Above we create a navigation view with a navigation stack with destinations as `MainDestinations`.
+Above we create a navigation view with a navigation stack with destinations as `MainDestinations`, and providing the navigationService.
 Now you are ready to navigate!
 
 ### Navigation 🗺️
