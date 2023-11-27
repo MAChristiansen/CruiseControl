@@ -16,6 +16,7 @@ struct CCTabView<TabItem: CCTabDestination>: View {
                             .tabItem {
                                 item.buildItemView()
                             }
+                            .badge(viewModel.getBagde(for: item))
                     }
                 }
                 .toolbarBackground(hideNativeTabBar ? Visibility.hidden : .automatic, for: .tabBar)

@@ -60,6 +60,19 @@ open class CCNavigationService {
         }
     }
     
+    /// Changes the bagde for the requested Tab..
+    public func changeTabBagde<T: CCTabDestination>(for item: T, to newBagde: String?) {
+        onMainThread {
+            let tabBar = try self.getTabBar(item)
+            
+            if !tabBar.items.contains(item) {
+                throw CCNavigationServiceError.tabBarDoesNotHaveRequestedTab
+            }
+            
+            tabBar.changeBagde(for: item, to: newBagde)
+        }
+    }
+    
     /// Will present a sheet with the provided destination. Note: You can't display a sheet on a sheet. This action is done on the Main Dispatch queue.
     /// - Parameter destination: The destination of your sheet
     public func display<T: CCDestination>(_ destination: T) {
