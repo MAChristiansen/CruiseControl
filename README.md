@@ -43,7 +43,9 @@ var navigationService = CCNavigationService()
 
 ❗️To retrieve callbacks on the `CCNavigationService` provide a `CCNavigationServiceDelegate` in the `init()` or assign the `delegate` runtime.
 
-### CCNavigationStack Setup 🛠️
+### NavigationStack 🥞
+
+#### CCNavigationStack Setup 🛠️
 
 To create your navigation stack you need to define the destinations for the given stack. You do that by conform to `CCDestination`. CruiseControl recomment to create a `enum` type that conforms to `CCDestination` like:
 
@@ -94,11 +96,11 @@ struct MainView: View {
 Above we create a navigation view with a navigation stack with destinations as `MainDestinations`, and providing the navigationService.
 Now you are ready to navigate!
 
-### Navigation 🗺️
+#### Navigation 🗺️
 
 To navitage you have to use the global `navigationService` variable. All the navigation actions will be executed on the navigation stack with the according destination type. Don't worry - the `CCNavigationService` will take care of that!
 
-#### Push 🫸🏼
+`Push 🫸🏼`
 To push a view on the navigation stack use following:
 
 ```swift
@@ -111,14 +113,14 @@ To push multiple views on the navigation stack use following:
 navigationService?.push([MainDestinations.blue, .yellow])
 ```
 
-#### Create/Replace stack 🔨
+`Create/Replace stack 🔨`
 To create or replace the stack use following:
 
 ```swift
 navigationService?.createStack([MainDestinations.red, .yellow, .blue])
 ```
 
-#### Pop 🫷🏼
+`Pop 🫷🏼`
 To pop a view from the stack use following:
 
 ```swift
@@ -137,7 +139,7 @@ To pop to root of the stack use following:
 navigationService?.popToRoot(MainDestinations.self)
 ```
 
-#### Sheet 📃
+`Sheet 📃`
 To present a sheet use following:
 
 ```swift
@@ -152,7 +154,7 @@ To dismiss the sheet use following:
 navigationService?.dismissSheet(MainDestinations.self)
 ```
 
-#### System Alert 🚨
+`System Alert 🚨`
 To display a system alert use following:
 
 ```swift
@@ -177,6 +179,79 @@ To dismiss a system alert use following:
 ```swift
 navigationService?.dismissAlert(MainDestinations.self)
 ```
+
+### TabBar 🍫
+
+#### CCTabBar Setup 🛠️ 
+
+To create your tab bar you need to define the destinations for the given tab bar. You do that by conform to `CCTabDestination`. CruiseControl recomment to create an `enum` type that conforms to `CCTabDestination` like:
+
+```swift
+enum MainTabDestination: CCTabDestination {
+    
+    var id: MainTabDestination { self }
+    
+    case circle
+    case square
+    
+    @ViewBuilder
+    func buildItemView() -> some View {
+        switch self {
+        case .circle:
+            Label("Circle", systemImage: "circle")
+        case .square:
+            Label("Square", systemImage: "square")
+        }
+    }
+    
+    @ViewBuilder
+    func buildRootView() -> some View {
+        switch self {
+        case .circle:
+            MainView()
+        case .square:
+            SquareView()
+        }
+    }
+}
+```
+
+Now you are ready to initate your tab bar view.
+Use the `CCTabDestination` to initiate the `CCTabView`
+
+```swift
+import SwiftUI
+import CruiseControl
+
+struct MainTabBar: View {
+    var body: some View {
+        CCTabView(viewModel: CCTabViewModel<MainTabDestination>(navigationService: navigationService, selectedItem: .circle, items: [.circle, .square]))
+    }
+}
+```
+
+The `CCTabView` has variable `hideNativeTabBar`. If you toggle this in the initializer to `true`, it will hide the native tab bar implementation and you have full control to create your custom tab bar view.
+
+Now you are ready to navigate!
+
+#### Change `CCTabView` state 🍫
+
+`Change selected tab item color`
+To change the selected color of your tab bar items, you need to set the `AccentColor` in your `Asserts` file.
+
+`Change selected tab`
+
+```swift
+navigationService.changeTab(MainTabDestination.circle)
+```
+
+`Change bagde count`
+
+```swift
+navigationService.changeTabBagde(for: MainTabDestination.circle, to: "5")
+```
+
+NOTE: Fix you want to clear the bagde (remove bagde), set the `to`-parameter to `nil`.
 
 ## Example Apps
 Find CruiseControl in action in following projects:
