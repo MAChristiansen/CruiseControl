@@ -8,7 +8,7 @@ public protocol CCNavigationServiceDelegate {
 
 open class CCNavigationService {
     
-    private var navigationStacks = [AnyObject]()
+    private var navigationObjects = [AnyObject]()
     public var delegate: CCNavigationServiceDelegate?
     
     public init(delegate: CCNavigationServiceDelegate? = nil) {
@@ -18,20 +18,47 @@ open class CCNavigationService {
     /// Registers the navigation stack. You must register your navigation stack before you can perform navigation actions on it. You can't register multiple stack of the same type.
     /// - Parameter stack: The navigation stack you want to register
     func register<T: CCDestination>(_ stack: CCNavigationStack<T>) {
-        if navigationStacks.filter({ $0 is CCNavigationStack<T> }).count > 0 {
+        if navigationObjects.filter({ $0 is CCNavigationStack<T> }).count > 0 {
             delegate?.onError(CCNavigationServiceError.destinationStackAlreadyRegistered)
             return
         }
         
-        navigationStacks.append(stack)
+        navigationObjects.append(stack)
     }
     
-    ///  Unregisters the navigations stack that is provided as parameter.
+    /// Unregisters the navigations stack that is provided as parameter.
     /// - Parameter stack: The navigation stack you want to unregister
     func unregister<T: CCDestination>(_ stack: CCNavigationStack<T>) {
-        navigationStacks.removeAll { $0 is CCNavigationStack<T> }
+        navigationObjects.removeAll { $0 is CCNavigationStack<T> }
     }
     
+    /// Registers a tab bar. You must register your tab bar before you can perform navigation actions on it. You can't register multiple stack of the same type.
+    func register<T: CCTabDestination>(_ tabView: CCTabViewModel<T>) {
+        if navigationObjects.filter({ $0 is CCTabViewModel<T> }).count > 0 {
+            delegate?.onError(CCNavigationServiceError.destinationTabBarAlreadyRegistered)
+            return
+        }
+        
+        navigationObjects.append(tabView)
+    }
+    
+    /// Unregisters the tab bar
+    func unregister<T: CCTabDestination>(_ tabView: CCTabViewModel<T>) {
+        navigationObjects.removeAll { $0 is CCTabViewModel<T> }
+    }
+    
+    /// Changes the tab for the requested TabBar.
+    public func changeTab<T: CCTabDestination>(_ newTab: T) {
+        onMainThread {
+            let tabBar = try self.getTabBar(newTab)
+            
+            if !tabBar.items.contains(newTab) {
+                throw CCNavigationServiceError.tabBarDoesNotHaveRequestedTab
+            }
+            
+            tabBar.selectedItem = newTab
+        }
+    }
     
     /// Will present a sheet with the provided destination. Note: You can't display a sheet on a sheet. This action is done on the Main Dispatch queue.
     /// - Parameter destination: The destination of your sheet
@@ -83,7 +110,6 @@ open class CCNavigationService {
             navigationStack.dismissAlert()
         }
     }
-    
     
     /// Pushes destination on the according navigation stack. This action is done on the Main Dispatch queue.
     /// - Parameter destination: The destination to be presented
@@ -158,7 +184,7 @@ open class CCNavigationService {
     }
     
     private func getNavigationStack<T: CCDestination>(for destination: T) throws -> CCNavigationStack<T> {
-        for stack in navigationStacks {
+        for stack in navigationObjects {
             if let navigationStack = stack as? CCNavigationStack<T> {
                 return navigationStack
             }
@@ -168,13 +194,23 @@ open class CCNavigationService {
     }
     
     private func getNavigationStack<T: CCDestination>(forType type: T.Type) throws -> CCNavigationStack<T> {
-        for stack in navigationStacks {
+        for stack in navigationObjects {
             if let navigationStack = stack as? CCNavigationStack<T> {
                 return navigationStack
             }
         }
         
         throw CCNavigationServiceError.navigationStackNotMatchingDestinationType
+    }
+    
+    private func getTabBar<T: CCTabDestination>(_ newTab: T) throws -> CCTabViewModel<T> {
+        for objects in navigationObjects {
+            if let tabBar = objects as? CCTabViewModel<T> {
+                return tabBar
+            }
+        }
+        
+        throw CCNavigationServiceError.tabBarNotMatchingDestinationType
     }
     
     private func onMainThread(_ action: @escaping () throws -> Void) {
@@ -186,10 +222,12 @@ open class CCNavigationService {
             }
         }
     }
-    
 }
 
 enum CCNavigationServiceError: Error {
     case navigationStackNotMatchingDestinationType
+    case tabBarNotMatchingDestinationType
     case destinationStackAlreadyRegistered
+    case destinationTabBarAlreadyRegistered
+    case tabBarDoesNotHaveRequestedTab
 }

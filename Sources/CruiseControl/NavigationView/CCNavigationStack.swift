@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-public class CCNavigationStack<Destination: CCDestination>: ObservableObject {
+public class CCNavigationStack<Destination: CCDestination>: CCLifeCycleViewModel, ObservableObject {
     @Published var stack = [Destination]()
     @Published var sheet: Destination?
     @Published var presentSheetAlert: Bool = false
@@ -20,11 +20,11 @@ public class CCNavigationStack<Destination: CCDestination>: ObservableObject {
         alert = nil
     }
     
-    func onAppear() {
+    override func onAppear() {
         navigationService.register(self)
     }
     
-    func onDisappear() {
+    override func onDisappear() {
         navigationService.unregister(self)
     }
 }
