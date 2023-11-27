@@ -7,7 +7,7 @@ public class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, Ob
     @Published var bagdes: [TabItem: String?]
     var items: [TabItem]
     
-    init(navigationService: CCNavigationService, selectedItem: TabItem, items: [TabItem]) {
+    public init(navigationService: CCNavigationService, selectedItem: TabItem, items: [TabItem]) {
         self.navigationService = navigationService
         self.selectedItem = selectedItem
         self.items = items
