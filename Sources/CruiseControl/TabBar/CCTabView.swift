@@ -1,12 +1,17 @@
 import Foundation
 import SwiftUI
 
-struct CCTabView<TabItem: CCTabDestination>: View {
+public struct CCTabView<TabItem: CCTabDestination>: View {
     
-    @StateObject var viewModel: CCTabViewModel<TabItem>
-    var hideNativeTabBar = false
+    @ObservedObject var viewModel: CCTabViewModel<TabItem>
+    public var hideNativeTabBar = false
     
-    var body: some View {
+    public init(viewModel: CCTabViewModel<TabItem>, hideNativeTabBar: Bool = false) {
+        self.viewModel = viewModel
+        self.hideNativeTabBar = hideNativeTabBar
+    }
+    
+    public var body: some View {
         CCLifeCycleView(viewModel: viewModel) {
             TabView(selection: $viewModel.selectedItem) {
                 Group {
