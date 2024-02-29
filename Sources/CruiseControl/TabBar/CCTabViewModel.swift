@@ -3,7 +3,7 @@ import Foundation
 open class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, ObservableObject {
     
     public let navigationService: CCNavigationService
-    @Published var selectedItem: TabItem
+    @Published public var selectedItem: TabItem
     @Published var bagdes: [TabItem: String?]
     var items: [TabItem]
     
@@ -19,7 +19,7 @@ open class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, Obse
         self.bagdes = Dictionary(uniqueKeysWithValues: items.map { ($0, nil) })
     }
     
-    func getBagde(for item: TabItem) -> String? {
+    public func getBagde(for item: TabItem) -> String? {
         bagdes[item] ?? nil
     }
     
@@ -28,10 +28,12 @@ open class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, Obse
     }
     
     override func onAppear() {
+        super.onAppear()
         navigationService.register(self)
     }
     
     override func onDisappear() {
+        super.onDisappear()
         navigationService.unregister(self)
     }
 }
