@@ -5,7 +5,7 @@ open class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, Obse
     public let navigationService: CCNavigationService
     @Published public var selectedItem: TabItem
     @Published var bagdes: [TabItem: String?]
-    var items: [TabItem]
+    public var items: [TabItem]
     
     public init(
         navigationService: CCNavigationService,
