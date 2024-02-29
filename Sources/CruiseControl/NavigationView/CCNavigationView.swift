@@ -62,7 +62,7 @@ struct CCLifeCycleView<Content: View>: View {
     }
 }
 
-public class CCLifeCycleViewModel {
+open class CCLifeCycleViewModel {
     func onAppear() { }
     func onDisappear() { }
 }

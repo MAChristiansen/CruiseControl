@@ -1,13 +1,17 @@
 import Foundation
 
-public class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, ObservableObject {
+open class CCTabViewModel<TabItem: CCTabDestination>: CCLifeCycleViewModel, ObservableObject {
     
-    private let navigationService: CCNavigationService
+    public let navigationService: CCNavigationService
     @Published var selectedItem: TabItem
     @Published var bagdes: [TabItem: String?]
     var items: [TabItem]
     
-    public init(navigationService: CCNavigationService, selectedItem: TabItem, items: [TabItem]) {
+    public init(
+        navigationService: CCNavigationService,
+        selectedItem: TabItem,
+        items: [TabItem]
+    ) {
         self.navigationService = navigationService
         self.selectedItem = selectedItem
         self.items = items
