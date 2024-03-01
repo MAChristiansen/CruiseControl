@@ -5,6 +5,10 @@ public struct CCTabView<TabItem: CCTabDestination>: View {
     
     @StateObject var viewModel: CCTabViewModel<TabItem>
     
+    init(viewModel: CCTabViewModel<TabItem>) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
     public var body: some View {
         CCLifeCycleView(viewModel: viewModel) {
             TabView(selection: $viewModel.selectedItem) {
