@@ -1,11 +1,11 @@
 import SwiftUI
 
-struct CCCustomTabView<TabItem: CCTabDestination, TabView: View>: View {
+public struct CCCustomTabView<TabItem: CCTabDestination, TabView: View>: View {
     
-    @StateObject var viewModel: CCTabViewModel<TabItem>
-    var tabView: () -> TabView
+    @StateObject public var viewModel: CCTabViewModel<TabItem>
+    public var tabView: () -> TabView
     
-    var body: some View {
+    public var body: some View {
         CCLifeCycleView(viewModel: viewModel) {
             tabView()
         }
