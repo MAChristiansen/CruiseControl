@@ -5,7 +5,7 @@ public struct CCTabView<TabItem: CCTabDestination>: View {
     
     @StateObject var viewModel: CCTabViewModel<TabItem>
     
-    init(viewModel: CCTabViewModel<TabItem>) {
+    public init(viewModel: CCTabViewModel<TabItem>) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
