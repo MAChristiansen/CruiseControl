@@ -19,7 +19,13 @@ public class CCNavigationStack<Destination: CCDestination>: CCLifeCycleViewModel
         presentSheetAlert = false
         alert = nil
     }
-    
+
+    func dismissSheet() {
+        guard let sheet else { return }
+        navigationService.sheetDelegate?.onSheetDismissed(sheet)
+        self.sheet = nil
+    }
+
     override func onAppear() {
         navigationService.register(self)
     }

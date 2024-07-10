@@ -6,11 +6,16 @@ public protocol CCNavigationServiceDelegate {
     func onError(_ error: Error)
 }
 
+public protocol CCSheetDelegate {
+    func onSheetDismissed(_ destination: any CCDestination)
+}
+
 open class CCNavigationService {
     
     private var navigationObjects = [AnyObject]()
     public var delegate: CCNavigationServiceDelegate?
-    
+    public var sheetDelegate: CCSheetDelegate?
+
     public init(delegate: CCNavigationServiceDelegate? = nil) {
         self.delegate = delegate
     }

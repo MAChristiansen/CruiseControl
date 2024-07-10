@@ -20,7 +20,7 @@ public struct CCNavigationView<Destination: CCDestination, RootView: View>: View
                     }
             }
             .sheet(isPresented: .constant(navigationStack.sheet != nil), onDismiss: {
-                navigationStack.sheet = nil
+                navigationStack.dismissSheet()
             }) {
                 navigationStack.sheet!.buildView()
                     .presentAlert(navigationStack.alert, isPresented: $navigationStack.presentSheetAlert)
